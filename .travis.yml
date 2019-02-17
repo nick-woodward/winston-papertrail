@@ -1,0 +1,36 @@
+sudo: false
+language: node_js
+node_js:
+  - 11
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+os:
+  - linux
+  - osx
+cache: npm
+  directories:
+    - node_modules
+branches:
+  only:
+    - master
+    - /^greenkeeper/.*$/
+notifications:
+  email: change
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - yarn run lint
+        - npm test
+    - stage: publish
+      node_js: 8
+      os: linux
+      script:
+        - npm test
+        - npm run report-coverage
+      after_success:
+        - npm run semantic-release
